@@ -33,16 +33,32 @@ def get_verdict(ratio):
         return "Red Light"
 
 def main():
-    st.set_page_config(page_title="Threat Assessment", page_icon="⚔️", layout="wide")
+    # Keep layout="wide" but Streamlit natively handles mobile stacking
+    st.set_page_config(page_title="Threat Assessment", page_icon="⚔️", layout="centered")
     
     st.title("Torn City Threat Assessment")
     st.write("Generate a personalized Threat Assessment dashboard against an enemy faction.")
     
-    with st.sidebar:
-        st.header("Configuration")
-        api_key = st.text_input("Enter Your Public API Key", type="password")
-        faction_id = st.text_input("Enter Enemy Faction ID")
+    # Move inputs out of the sidebar and into an expander or container for better mobile UX
+    with st.container():
+        st.subheader("Configuration")
+        
+        # Added helper text for API Key
+        api_key = st.text_input(
+            "Enter Your Public API Key", 
+            type="password",
+            help="You can find your 'Public API Key' in Torn by going to your Preferences (the gear icon) -> API Settings. Create a new key with 'Public' access level."
+        )
+        
+        # Added helper text for Faction ID
+        faction_id = st.text_input(
+            "Enter Enemy Faction ID",
+            help="To find a Faction ID, go to their faction page in Torn and look at the URL. It will be the number at the end: e.g., torn.com/factions.php?step=profile&ID=12345 (The ID is 12345)."
+        )
+        
         submit_btn = st.button("Generate Hitlist", type="primary", use_container_width=True)
+
+    st.divider()
 
     if submit_btn:
         if not api_key or not faction_id:
